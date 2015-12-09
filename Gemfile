@@ -38,6 +38,7 @@ gem 'devise'
 
 gem 'figaro', '1.0'
 gem 'faker'
+gem 'active_model_serializers'
 
 
 group :production do
