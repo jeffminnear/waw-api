@@ -16,7 +16,7 @@ class GoalsController < ApplicationController
     @goal = Goal.find(params[:id])
     # @goal = current_user.goals.find(params[:id])
 
-    if @goal.destoroy
+    if @goal.destroy
       flash[:notice] = "Goal completed successfully!"
     else
       flash[:error] = "There was an error marking your goal completed."
