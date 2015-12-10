@@ -94,5 +94,19 @@ RSpec.describe GoalsController, type: :controller do
         delete :destroy, format: :js, id: 2
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "sets the error flash when destroy fails" do
+      user = create(:user)
+      goal = instance_double("Goal")
+      expect(goal).to receive(:destoroy).and_return(false)
+      goal_id = "123"
+      expect(Goal).to receive(:find).with(goal_id).and_return(goal)
+
+      sign_in(user)
+
+      delete :destroy, format: :js, id: goal_id
+
+      expect(flash[:error]).to eq("There was an error marking your goal completed.")
+    end
   end
 end
