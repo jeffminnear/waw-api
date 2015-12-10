@@ -13,10 +13,9 @@ class GoalsController < ApplicationController
   end
 
   def destroy
-    @goal = Goal.find(params[:id])
-    # @goal = current_user.goals.find(params[:id])
+    @goal = current_user.goals.find(params[:id])
 
-    if @goal.destroy
+    if @goal.destoroy
       flash[:notice] = "Goal completed successfully!"
     else
       flash[:error] = "There was an error marking your goal completed."

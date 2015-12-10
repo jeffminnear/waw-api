@@ -97,10 +97,12 @@ RSpec.describe GoalsController, type: :controller do
 
     it "sets the error flash when destroy fails" do
       user = create(:user)
-      goal = instance_double(Goal)
-      expect(goal).to receive(:destroy).and_return(false)
       goal_id = "123"
-      expect(Goal).to receive(:find).with(goal_id).and_return(goal)
+      goal = instance_double(Goal)
+
+      expect(controller).to receive(:current_user).and_return(user)
+      expect(user.goals).to receive(:find).with(goal_id).and_return(goal)
+      expect(goal).to receive(:destoroy).and_return(false)
 
       sign_in(user)
 
