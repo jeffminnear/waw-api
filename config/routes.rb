@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
-    resources :users
+    resources :users, only: :index do
+      resources :goals, only: :create
+    end
   end
 
   devise_for :users
