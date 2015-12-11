@@ -13,7 +13,6 @@ class GoalsController < ApplicationController
   end
 
   def destroy
-    # @goal = Goal.find(params[:id])
     @goal = current_user.goals.find(params[:id])
 
     if @goal.destroy
