@@ -103,7 +103,7 @@ RSpec.describe GoalsController, type: :controller do
 
       expect(controller).to receive(:current_user).and_return(user)
       expect(user.goals).to receive(:find).with(goal_id).and_return(goal)
-      expect(goal).to receive(:destoroy).and_return(false)
+      expect(goal).to receive(:destroy).and_return(false)
 
       sign_in(user)
 
