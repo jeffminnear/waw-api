@@ -12,6 +12,26 @@ class Api::GoalsController < ApiController
     end
   end
 
+  def update
+    goal = Goal.find(params[:id])
+
+    if goal.update(goal_params)
+      render json: goal
+    else
+      render json: { errors: goal.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    begin
+      goal = Goal.find(params[:id])
+      goal.destroy
+      render json: {}, status: :no_content
+    rescue ActiveRecord::RecordNotFound
+      render json: {}, status: :not_found
+    end
+  end
+
 
   private
 
