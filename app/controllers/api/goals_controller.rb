@@ -1,6 +1,11 @@
 class Api::GoalsController < ApiController
   before_action :authenticated?
 
+  def index
+    user = User.last # VERY TEMPORARY
+    render json: user.goals, each_serializer: GoalSerializer
+  end
+
   def create
     user = User.find(params[:user_id])
     goal = user.goals.build(goal_params)
