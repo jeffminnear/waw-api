@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :create] do
       resources :goals, only: [:create, :update, :destroy]
     end
+    resources :goals, only: :index
   end
 
   devise_for :users
