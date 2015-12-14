@@ -1,5 +1,4 @@
 class Api::UsersController < ApiController
-  before_action :authenticated?
 
   def index
     users = User.all
@@ -18,13 +17,7 @@ class Api::UsersController < ApiController
   end
 
   def destroy
-    begin
-      user = User.find(params[:id])
-      user.destroy
-      render json: {}, status: :no_content
-    rescue ActiveRecord::RecordNotFound
-      render json: {}, status: :not_found
-    end
+    render json: { error: "You can not delete a user account through the API. Please visit the website if you wish to proceed with this action." }, status: :forbidden
   end
 
 
