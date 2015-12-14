@@ -1,10 +1,8 @@
 Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
-    resources :users, only: [:index, :create] do
-      resources :goals, only: [:create, :update, :destroy]
-    end
-    resources :goals, only: :index
+    resources :users, only: [:index, :create, :destroy]
+    resources :goals, only: [:index, :create, :update, :destroy]
   end
 
   devise_for :users
