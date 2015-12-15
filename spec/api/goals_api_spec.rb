@@ -7,13 +7,9 @@ describe '/api/goals' do
     context 'with correct credentials' do
       it 'returns a list of current_user goals as JSON' do
         user = create(:user)
-        # goal_1 = create(:goal, user: user)
-        # goal_2 = create(:goal, user: user)
-        # goal_3 = create(:goal, user: user)
         goals = create_list(:goal, 3, user: user)
         headers = json_request_headers
-        headers['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
-        # @env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+        headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
 
         get '/api/goals/', {}, headers
         json = JSON.parse(response.body)
