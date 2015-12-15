@@ -5,12 +5,16 @@ class Api::GoalsController < ApiController
   end
 
   def create
-    goal = current_user.goals.build(goal_params)
+    begin
+      goal = current_user.goals.build(goal_params)
 
-    if goal.save
-      render json: goal
-    else
-      render json: { errors: goal.errors.full_messages }, status: :unprocessable_entity
+      if goal.save
+        render json: goal
+      else
+        render json: { errors: goal.errors.full_messages }, status: :unprocessable_entity
+      end
+    rescue ActionController::ParameterMissing
+      render json: { error: "Incorrect parameters" }, status: :bad_request
     end
   end
 
