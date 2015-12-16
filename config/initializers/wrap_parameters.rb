@@ -12,3 +12,21 @@ end
 # ActiveSupport.on_load(:active_record) do
 #  self.include_root_in_json = true
 # end
+
+# { name: "asdf" }
+# { title: "asdf" }.to_json
+#
+#
+# { goal: { name: "asdf" , title: "adsf" } }
+# { goal: { title: "adsf" } }
+#
+# { goal: { title: "asdf" } }.to_json
+#
+#
+# params.require(:goal).permit(:name)
+#
+# def goal_params
+# goal_params = params.require(:goal).permit(:name)
+# goal_params.require(:name)
+# goal_params
+# end
