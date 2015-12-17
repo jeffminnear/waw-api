@@ -1,7 +1,7 @@
 <h3>Hey, <%= @user.email %></h3>
 <p>I haven't seen you since <%= @user.last_sign_in_at.to_s(:long_ordinal) %>!</p>
 <br>
-<div class="row">
+<div class="row" data-goals>
   <% @user.active_goals.each do |goal| %>
     <%= render 'goals/goal', goal: goal %>
   <% end %>

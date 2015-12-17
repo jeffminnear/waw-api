@@ -5,5 +5,5 @@
     <%= f.label :name, class: 'sr-only' %>
     <%= f.text_field :name, class: 'form-control', placeholder: "What would you like to accomplish?" %>
   </div>
-    <%= f.submit "Save", class: 'btn btn-success' %>
+    <%= f.submit "Save", class: 'btn btn-success', data: { "create-goal-button" => true } %>
 <% end %>
