@@ -6,14 +6,21 @@
     // id will be needed when adding delete functionality dynamically.
     // var goalId = data.todo.id;
 
+
+    var goalElement = '<div id="goal-' + data.goal.id + '" class="media">' +
+                      '<div class="media-body"><div class="goal goal-ok">' +
+                      '<h4 class="media-heading">' + data.goal.name + '</h4>' +
+                      '<button data-delete-goal-button="true" data-goal-id="' + data.goal.id + '"' +
+                      '>Completed</button><br>' +
+                      '<small>7 days left to complete</small></div></div></div>';
+    var goalsWrapper = $("[data-goals]");
     // Add HTML for new goal to document
-    var goalElement = $('#goal-'+ goalID);
-    goalElement.show();
+    goalsWrapper.append(goalElement);
   };
 
   function clearForm() {
     // Clear input field
-    var descriptionInput = $("#todo_description");
+    var descriptionInput = $("#goal_name");
     descriptionInput.val("");
   };
 
@@ -61,15 +68,16 @@
       url: "/api/goals",
       dataType: "json",
       contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(todo)
+      data: JSON.stringify(goal)
     };
 
     // Initiate the AJAX request
     // Docs: http://api.jquery.com/jQuery.ajax/
-    $.ajax(ajaxOptions).done([addTodoToDom, clearForm]).fail(handleError);
+    $.ajax(ajaxOptions).done([addGoalToDOM, clearForm]).fail(handleError);
   };
 
   function deleteGoal(event) {
+    console.log('delete goal called');
     event.preventDefault();
 
     // Get the delete button that was clicked (event.target) and
