@@ -15,7 +15,11 @@ feature "user completes goal", js: true do
 
     expect(page).to have_content(goal.name)
 
-    click_link "Completed"
+    click_button "Completed"
+
+    fill_in "", with: user.email
+    fill_in "", with: user.password
+    click_button "Log In"
 
     expect(page).to have_no_content(goal.name)
     expect(current_path).to eq("/users/#{user.id}")
