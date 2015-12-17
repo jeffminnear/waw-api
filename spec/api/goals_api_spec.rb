@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 describe '/api/goals' do
+  def basic_credentials(email, password)
+    ActionController::HttpAuthentication::Basic.encode_credentials(email,password)
+  end
+
+  def formatted_time(time)
+    time.strftime('%B %d %Y')
+  end
 
   context 'GET#index' do
 
@@ -9,7 +16,7 @@ describe '/api/goals' do
         user = create(:user)
         goals = create_list(:goal, 3, user: user)
         headers = json_request_headers
-        headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+        headers['Authorization'] = basic_credentials(user.email,user.password)
 
         get '/api/goals/', {}, headers
         json = JSON.parse(response.body)
@@ -19,7 +26,13 @@ describe '/api/goals' do
         expect(json['goals'].length).to eq(3)
 
         goals.each_with_index do |goal, i|
-          expect(json['goals'][i]).to eq({"id" => goals[i].id, "name" => goals[i].name, "created_at" => goals[i].created_at.strftime('%B %d %Y')})
+          expected_hash = {
+            "id" => goals[i].id,
+            "name" => goals[i].name,
+            "created_at" => formatted_time(goals[i].created_at)
+          }
+
+          expect(json['goals'][i]).to eq(expected_hash)
         end
       end
     end
@@ -31,15 +44,15 @@ describe '/api/goals' do
       it 'creates a new goal as the current_user' do
         user = create(:user)
         headers = json_request_headers
-        headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+        headers['Authorization'] = basic_credentials(user.email,user.password)
         params = { name: "the name of the goal" }
 
-        post '/api/goals/', params.to_json, headers
+        expect{ post '/api/goals/', params.to_json, headers }.to change(Goal,:count).by(1)
         json = JSON.parse(response.body)
 
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
-        expect(json).to eq({ "goal" => { "id" => 1, "name" => "the name of the goal", "created_at" => Time.now.strftime('%B %d %Y') }})
+        expect(json).to eq({ "goal" => { "id" => Goal.last.id, "name" => "the name of the goal", "created_at" => formatted_time(Time.now) }})
       end
     end
 
@@ -47,7 +60,7 @@ describe '/api/goals' do
       it 'returns an error' do
         user = create(:user)
         headers = json_request_headers
-        headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+        headers['Authorization'] = basic_credentials(user.email,user.password)
         params = { title: "the name of the goal" }
 
         post '/api/goals/', params.to_json, headers
@@ -64,21 +77,20 @@ describe '/api/goals' do
       user = create(:user)
       goal = create(:goal, user: user, name: "the original name")
       headers = json_request_headers
-      headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+      headers['Authorization'] = basic_credentials(user.email,user.password)
       params = { name: "a new name that is different" }
 
-      put '/api/goals/1', params.to_json, headers
+      put "/api/goals/#{goal.id}", params.to_json, headers
       json = JSON.parse(response.body)
 
       expect(response).to have_http_status(:ok)
-      expect(json["goal"]).to eq({ "id" => 1, "name" => "a new name that is different", "created_at" => Time.now.strftime('%B %d %Y') })
+      expect(json["goal"]).to eq({ "id" => goal.id, "name" => "a new name that is different", "created_at" => formatted_time(Time.now) })
     end
 
     it 'returns an error if the requested goal can not be found' do
       user = create(:user)
-      goal = create(:goal, user: user, name: "the original name")
       headers = json_request_headers
-      headers['Authorization'] = ActionController::HttpAuthentication::Basic.encode_credentials(user.email,user.password)
+      headers['Authorization'] = basic_credentials(user.email,user.password)
       params = { name: "a new name that is different" }
 
       put '/api/goals/2', params.to_json, headers
